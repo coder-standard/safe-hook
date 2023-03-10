@@ -193,7 +193,7 @@ with open(safeHookPreCommitFile, 'wb') as f:
     f.write(safeHookPreCommitFileContent.encode())
 
 os.popen("chmod +x " + safeHookPreCommitFile)
-shutil.copyfile(os.path.join(workDir, ".gitleaks.toml"), os.path.join(hooksDir, "gitleaks.toml"))
+shutil.copyfile(os.path.join(os.path.dirname(__file__), ".gitleaks.toml"), os.path.join(hooksDir, "gitleaks.toml"))
 with open(preCommitFile, 'a', encoding='utf-8') as f:
     f.write("\n" + safeHookPreCommandFileRelPath + "\n")
 
