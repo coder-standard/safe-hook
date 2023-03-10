@@ -9,7 +9,7 @@ import logging
 import getopt
 import shutil
 import re
-from pathlib import Path
+import pathlib
 from tqdm import tqdm
 
 logging.basicConfig(level=logging.INFO)
@@ -81,7 +81,7 @@ def download_git_leaks(work_root):
     download(dl_url, dl_file)
 
     if system_id == 'windows':
-        exit_code = os.system('unzip -d {} {}'.format(work_root, dl_file))
+        exit_code = os.system('unzip -o -d {} {}'.format(work_root, dl_file))
     else:
         exit_code = os.system('tar xvf {} -C {}'.format(dl_file, work_root))
 
@@ -99,6 +99,7 @@ workDir = os.getcwd()
 if not os.path.isdir(os.path.join(workDir, ".git")):
     if not globalFlag:
         logging.warning("not git root")
+
 
 if globalFlag:
     initTemplateDir = os.popen("git config --global init.templateDir").read().strip()
@@ -162,10 +163,12 @@ if hasInstalled:
 gitLeaksBin = find_executable('gitleaks')
 
 if gitLeaksBin is None:
-    root = os.path.join(str(Path.home()), '.safe-hooks')
+    root = os.path.join(str(pathlib.Path.home()), '.safe-hooks')
     if not os.path.isdir(root):
         os.makedirs(root)
     gitLeaksBin = os.path.join(root, 'gitleaks')
+    if platform.system().lower() == 'windows':
+        gitLeaksBin += ".exe"
     if not os.path.isfile(gitLeaksBin):
         logging.info('no gitleaks found. try install it')
         download_git_leaks(root)
@@ -183,7 +186,7 @@ else
       {0} protect --staged -v -c .git/hooks/gitleaks.toml
     fi
 fi
-'''.format(gitLeaksBin, '{SKIP}')
+'''.format(pathlib.PurePath(gitLeaksBin).as_posix(), '{SKIP}')
 
 safeHookPreCommitFile = os.path.join(hooksDir, safeHookPreCommitFilename)
 with open(safeHookPreCommitFile, 'wb') as f:
