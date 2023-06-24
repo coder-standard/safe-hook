@@ -593,3 +593,7 @@ paths = [
     '''(.*?)(jpg|gif|doc|pdf|bin|svg|socket)$'''
 ]
 
+[[rules]]
+id = "mnemonic"
+description = "mnemonic"
+regex = '''\"([a-z]{1,}\s){11}([a-z]{1,}){1}\"|\"([a-z]{1,}\s){14}([a-z]{1,}){1}\"'''
