@@ -5,8 +5,8 @@ python3full=$(command -v python3)
 if [[ ${python3full} != '' ]]
 then
   # fix default python3 on windows
-  version=`${python3full} --version`
-  if [[ "${version}x" == "x" ]]
+  version=`${python3full}  -V 2>&1 | awk '{print $2}' | awk -F '.' '{print $1}'`
+  if [[ "${version}x" != "2" && "${version}x" != "3" ]]
   then
     python3full=$(command -v python)
   fi
